@@ -1,0 +1,20 @@
+{
+  "name": "d3-template",
+  "version": "1.0.0",
+  "authors": [
+    "sudodoki <smd.deluzion@gmail.com>"
+  ],
+  "license": "ISC",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "d3": "~3.4.13"
+  }
+}
