@@ -18,6 +18,11 @@ d3.json('./dataset.json', function (err, data) {
 
   var w = 650, h = 300;
   console.log(max);
+
+  var xScale = d3.scale.ordinal()
+                  .domain(top10.map(function (d) { return d.total;}))
+                  .rangeBands([0, w], 0.1);
+
   var yScale = d3.scale.linear()
                  .domain([0, max * 1.05])
                  .range([0, h]);
@@ -35,12 +40,12 @@ d3.json('./dataset.json', function (err, data) {
       return (i % 2) ? 'bar' : 'bar special';
     })
     .attr('x', function (d, i) {
-      return i * 65 ;
+      return xScale(d.total);
     })
     .attr('y', function (d) {
       return h - yScale(d.total);
     })
-    .attr('width', 60)
+    .attr('width', xScale.rangeBand())
     .attr('height', function (d) {
       return yScale(d.total);
     });
