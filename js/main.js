@@ -16,7 +16,10 @@ d3.json('./dataset.json', function (err, data) {
 
   var max = d3.max(top10, function (d) { return d.total; });
 
-  var w = 650, h = 300;
+
+  var margin = {top: 20, right: 20, bottom: 20, left: 20};
+  var w = 650 - margin.left - margin.right,
+    h = 300 - margin.top - margin.bottom;
   console.log(max);
 
   var xScale = d3.scale.ordinal()
@@ -31,9 +34,13 @@ d3.json('./dataset.json', function (err, data) {
                     .domain([0, top10.length])
                     .range(['#face3d', 'red']);
 
+
+
   var svg = d3.select('#chartArea').append('svg')
-    .attr('width', w)
-    .attr('height', h);
+    .attr('width', w + margin.left + margin.right)
+    .attr('height', h + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   svg
     .selectAll('rect')
