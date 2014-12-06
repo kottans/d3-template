@@ -8,11 +8,24 @@ d3.json('./dataset.json', function (err, data) {
                 .sortBy(function (item) { return - parseInt(item.total, 10); })
                 .first(10)
                 .shuffle()
+                .map(function (item) {
+                  item.total = parseInt(item.total, 10);
+                  return item;
+                })
                 .value();
 
+  var max = d3.max(top10, function (d) { return d.total; });
+
+  var w = 650, h = 300;
+  console.log(max);
+  var yScale = d3.scale.linear()
+                 .domain([0, max])
+                 .range([0, h]);
+
   var svg = d3.select('#chartArea').append('svg')
-    .attr('width', 650)
-    .attr('height', 300);
+    .attr('width', w)
+    .attr('height', h);
+
   svg
     .selectAll('rect')
     .data(top10)
@@ -25,10 +38,10 @@ d3.json('./dataset.json', function (err, data) {
       return i * 65 ;
     })
     .attr('y', function (d) {
-      return 300 - (d.total * 2);
+      return h - yScale(d.total);
     })
     .attr('width', 60)
     .attr('height', function (d) {
-      return d.total * 2 + 'px';
+      return yScale(d.total);
     });
 });
