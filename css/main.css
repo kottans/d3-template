@@ -1,3 +1,16 @@
 body {
-  background-color: #ddd;
+  padding-top: 50px;
+  padding-left: 100px;
+}
+
+.bar {
+  display: inline-block;
+  width: 60px;
+  height: 150px; /* Gets overriden by D3-assigned height below */
+  margin-right: 5px;
+  background-color: #face3d;
+}
+
+.bar.special {
+  background-color: red;
 }
