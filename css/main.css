@@ -1,12 +1,28 @@
-body {
-  padding-top: 50px;
-  padding-left: 100px;
+* {
+  box-sizing: border-box;
 }
 
-#chartArea {
-  width: 650px;
+#ChartArea {
+  background-color: #ddd;
+  width: 690px;
   height: 300px;
-  background-color: #CCC;
+  margin: 0 auto;
+}
+#ChartArea svg {
+  clear: both;
+}
+
+.arrow {
+  display: block;
+  height: 100%;
+  float: left;
+  width: 20px;
+  border: 1px solid red;
+  text-align: center;
+  line-height: 300px;
+}
+.arrow.right {
+  float: right;
 }
 
 .bar {
@@ -14,21 +30,21 @@ body {
   width: 60px;
   height: 150px; /* Gets overriden by D3-assigned height below */
   margin-right: 5px;
+  /*background-color: #face3d;*/
   fill: #face3d;
 }
 
-.bar.special {
-  fill: red;
+.special {
+  stroke: green;
 }
 
 .axis path,
 .axis line {
-    fill: none;
-    stroke: black;
-    shape-rendering: crispEdges;
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
 }
-
 .axis text {
-    font-family: sans-serif;
-    font-size: 11px;
+  font-family: sans-serif;
+  font-size: 11px;
 }

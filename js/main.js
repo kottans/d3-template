@@ -1,73 +1,139 @@
-
-d3.json('./dataset.json', function (err, data) {
-  var massagedData = _.transform(data.medals, function (result, val, key) {
-    result.push(_.assign({id: key}, val[0]));
-    return result;
-  }, []);
-  var top10 = _(massagedData)
-                .sortBy(function (item) { return - parseInt(item.total, 10); })
-                .first(10)
-                .shuffle()
-                .map(function (item) {
-                  item.total = parseInt(item.total, 10);
-                  return item;
-                })
-                .value();
-
-  var max = d3.max(top10, function (d) { return d.total; });
-
-
-  var margin = {top: 20, right: 20, bottom: 20, left: 50};
-  var w = 650 - margin.left - margin.right,
-    h = 300 - margin.top - margin.bottom;
-  console.log(max);
-
-  var xScale = d3.scale.ordinal()
-                  .domain(top10.map(function (d) { return d.total;}))
-                  .rangeBands([0, w], 0.1);
+d3.json('/dataset.json', function (err, data) {
+  if (err) {
+    alert(err);
+    return 1;
+  }
+  var massageData = _.transform(data.medals,
+    function (result, val, key) {
+      result.push(_.assign({id: key}, val[0]));
+      return result;
+    }, []);
+  var sortedData = _(massageData)
+    .map(function (item) {
+      item.total = parseInt(item.total, 10);
+      return item;
+    })
+    .sortBy(function (item) {
+      return - item.total;
+    })
+    .value();
 
 
+  var margin = {
+    top: 40,
+    right: 40,
+    bottom: 40,
+    left: 40
+  };
 
-  var yScale = d3.scale.linear()
-                 .domain([max * 1.05, 0 ])
-                 .range([0, h]);
+  var h = 300 - margin.top - margin.bottom,
+    w = 650 - margin.left - margin.right;
 
-  var yAxis = d3.svg.axis()
-              .scale(yScale)
-              .ticks(5)
-              .orient('left');
+  var svg = d3.select('#ChartArea')
+              .append('svg')
+              .attr('width', w + margin.left + margin.right)
+              .attr('height', h + margin.top + margin.bottom)
+              .append('g')
+              .attr('transform',
+                    'translate(' +
+                    margin.left +
+                    ',' +
+                    margin.top +
+                    ')');
+  svg.append('g')
+    .attr('class', 'axis x-axis');
 
-  var colorScale = d3.scale.linear()
-                    .domain([0, top10.length])
+  svg.append('g')
+    .attr('class', 'axis y-axis');
+
+  var currentOffset = 0;
+  var top10 = sortedData.slice(currentOffset, 10);
+  displayData(top10);
+  function displayData(data) {
+    var maxY = d3.max(data,
+      function (d) {
+        return d.total;
+      });
+
+    var cScale = d3.scale.linear()
+                    .domain([0, maxY])
                     .range(['#face3d', 'red']);
 
+    var yScale = d3.scale.linear()
+                  .domain([0, maxY * 1.05])
+                  .range([0, h]);
+
+    var xScale = d3.scale.ordinal()
+                    .domain(data
+                        .map(function (d) {
+                          return d.id;
+                        }))
+                    .rangeBands([0, w]);
+
+    var yAxis = d3.svg.axis()
+                  .scale(yScale)
+                  .ticks(5)
+                  .orient('left');
+
+    var xAxis = d3.svg.axis()
+                  .scale(xScale)
+                  .orient('bottom');
+
+    var dataSelection = svg.
+      selectAll('rect').
+      data(data);
+
+    dataSelection.exit().remove();
+
+    dataSelection.enter().append('rect');
+
+    dataSelection
+      .attr('x', function (d, i) {
+        return xScale(d.id);
+      })
+      .style('fill', function (d, i) {
+        return cScale(d.total);
+      })
+      .attr('width', xScale.rangeBand())
+      .attr('height', function (d, i) {
+        return yScale(d.total);
+      })
+      .attr('y', function (d, i) {
+        return h - yScale(d.total);
+      })
+      .on('mouseenter', function (d, i) {
+        console.log(d.total);
+        d3.select(d3.event.target)
+          .attr('class', 'special');
+      })
+      .on('mouseleave', function () {
+        d3.select(d3.event.target)
+          .attr('class', '');
+      });
+
+      svg.select('g.x-axis')
+        .attr("transform", "translate(0,"+h+")")
+        .call(xAxis);
+
+      svg.select('g.y-axis')
+        .call(yAxis);
+  }
 
 
-  var svg = d3.select('#chartArea').append('svg')
-    .attr('width', w + margin.left + margin.right)
-    .attr('height', h + margin.top + margin.bottom)
-    .append('g')
-    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+  d3.selectAll('.arrow')
+    .on('click', function () {
+      var dataToDisplay;
+      var direction = d3.event.target
+        .className.split(' ').slice(-1)[0];
+      if (direction === 'right') {
+        currentOffset += 1;
+        dataToDisplay = sortedData
+          .slice(currentOffset,
+            currentOffset + 10);
+        displayData(dataToDisplay);
+      } else {
+        alert('Not implemented yet');
+      }
 
-
-  svg
-    .selectAll('rect')
-    .data(top10)
-    .enter()
-    .append('rect')
-    .attr('x', function (d, i) {
-      return xScale(d.total);
-    })
-    .attr('y', function (d) {
-      return h - yScale(d.total);
-    })
-    .attr('width', xScale.rangeBand())
-    .attr('height', function (d) {
-      return yScale(d.total);
-    })
-    .attr('fill', function (d, i) {
-      return colorScale(i);
     });
-
-  svg.append('g').attr('class', 'axis').call(yAxis)
 });

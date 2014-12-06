@@ -3,7 +3,7 @@ var webserver  = require('gulp-webserver');
 
 var config = {
   host    : 'localhost',
-  port    : '8080'
+  port    : '1337'
 };
 
 gulp.task('webserver', function() {
