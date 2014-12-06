@@ -19,7 +19,7 @@ d3.json('./dataset.json', function (err, data) {
   var w = 650, h = 300;
   console.log(max);
   var yScale = d3.scale.linear()
-                 .domain([0, max])
+                 .domain([0, max * 1.05])
                  .range([0, h]);
 
   var svg = d3.select('#chartArea').append('svg')
