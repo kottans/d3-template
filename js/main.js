@@ -17,7 +17,7 @@ d3.json('./dataset.json', function (err, data) {
   var max = d3.max(top10, function (d) { return d.total; });
 
 
-  var margin = {top: 20, right: 20, bottom: 20, left: 20};
+  var margin = {top: 20, right: 20, bottom: 20, left: 50};
   var w = 650 - margin.left - margin.right,
     h = 300 - margin.top - margin.bottom;
   console.log(max);
@@ -26,9 +26,16 @@ d3.json('./dataset.json', function (err, data) {
                   .domain(top10.map(function (d) { return d.total;}))
                   .rangeBands([0, w], 0.1);
 
+
+
   var yScale = d3.scale.linear()
-                 .domain([0, max * 1.05])
+                 .domain([max * 1.05, 0 ])
                  .range([0, h]);
+
+  var yAxis = d3.svg.axis()
+              .scale(yScale)
+              .ticks(5)
+              .orient('left');
 
   var colorScale = d3.scale.linear()
                     .domain([0, top10.length])
@@ -41,6 +48,7 @@ d3.json('./dataset.json', function (err, data) {
     .attr('height', h + margin.top + margin.bottom)
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
 
   svg
     .selectAll('rect')
@@ -60,4 +68,6 @@ d3.json('./dataset.json', function (err, data) {
     .attr('fill', function (d, i) {
       return colorScale(i);
     });
+
+  svg.append('g').attr('class', 'axis').call(yAxis)
 });
