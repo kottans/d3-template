@@ -27,6 +27,10 @@ d3.json('./dataset.json', function (err, data) {
                  .domain([0, max * 1.05])
                  .range([0, h]);
 
+  var colorScale = d3.scale.linear()
+                    .domain([0, top10.length])
+                    .range(['#face3d', 'red']);
+
   var svg = d3.select('#chartArea').append('svg')
     .attr('width', w)
     .attr('height', h);
@@ -36,9 +40,6 @@ d3.json('./dataset.json', function (err, data) {
     .data(top10)
     .enter()
     .append('rect')
-    .attr('class', function (d, i) {
-      return (i % 2) ? 'bar' : 'bar special';
-    })
     .attr('x', function (d, i) {
       return xScale(d.total);
     })
@@ -48,5 +49,8 @@ d3.json('./dataset.json', function (err, data) {
     .attr('width', xScale.rangeBand())
     .attr('height', function (d) {
       return yScale(d.total);
+    })
+    .attr('fill', function (d, i) {
+      return colorScale(i);
     });
 });
