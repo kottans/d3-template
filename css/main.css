@@ -3,14 +3,20 @@ body {
   padding-left: 100px;
 }
 
+#chartArea {
+  width: 650px;
+  height: 300px;
+  background-color: #CCC;
+}
+
 .bar {
   display: inline-block;
   width: 60px;
   height: 150px; /* Gets overriden by D3-assigned height below */
   margin-right: 5px;
-  background-color: #face3d;
+  fill: #face3d;
 }
 
 .bar.special {
-  background-color: red;
+  fill: red;
 }

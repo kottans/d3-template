@@ -9,15 +9,26 @@ d3.json('./dataset.json', function (err, data) {
                 .first(10)
                 .shuffle()
                 .value();
-  d3
-    .select('body').selectAll('div')
+
+  var svg = d3.select('#chartArea').append('svg')
+    .attr('width', 650)
+    .attr('height', 300);
+  svg
+    .selectAll('rect')
     .data(top10)
     .enter()
-    .append('div')
+    .append('rect')
     .attr('class', function (d, i) {
       return (i % 2) ? 'bar' : 'bar special';
     })
-    .style('height', function (d) {
-      return d.total * 2 + 'px';
+    .attr('x', function (d, i) {
+      return i * 65 ;
     })
+    .attr('y', function (d) {
+      return 300 - (d.total * 2);
+    })
+    .attr('width', 60)
+    .attr('height', function (d) {
+      return d.total * 2 + 'px';
+    });
 });
