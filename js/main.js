@@ -13,6 +13,9 @@ d3.json('/dataset.json', function (err, data) {
       item.total = parseInt(item.total, 10);
       return item;
     })
+    .reject(function (country) {
+      return !country.total;
+    })
     .sortBy(function (item) {
       return - item.total;
     })
