@@ -21,7 +21,6 @@ d3.json('/dataset.json', function (err, data) {
     })
     .value();
 
-
   var margin = {
     top: 40,
     right: 40,
@@ -49,6 +48,17 @@ d3.json('/dataset.json', function (err, data) {
   svg.append('g')
     .attr('class', 'axis y-axis');
 
+  var tooltip = d3.select('body')
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
+  var tooltipTemplate = _.template("<b><%- total %> medals by <%- id %> are: "+
+                                   " <ul/>" +
+                                      "<li>Gold: <%- gold %></li>" +
+                                      "<li>Silver: <%- silver %></li>" +
+                                      "<li>Bronze: <%- bronze %></li>" +
+                                    "</ul>"+
+                                  "</b>");
   var currentOffset = 0;
   var top10 = sortedData.slice(currentOffset, 10);
   displayData(top10);
@@ -109,13 +119,15 @@ d3.json('/dataset.json', function (err, data) {
 
     dataSelection
       .on('mouseenter', function (d, i) {
-        console.log(d.total);
-        d3.select(d3.event.target)
-          .attr('class', 'special');
+        d3.event.target.classList.add('special');
+        tooltip.transition().duration(200).style('opacity', 0.9);
+        tooltip.html(tooltipTemplate(d))
+          .style('left', (d3.event.pageX) + 'px')
+          .style('top', (d3.event.pageY - 90) + 'px');
       })
       .on('mouseleave', function () {
-        d3.select(d3.event.target)
-          .attr('class', '');
+        tooltip.transition().duration(200).style('opacity', 0);
+        d3.event.target.classList.remove('special');
       });
 
       svg.select('g.x-axis')
