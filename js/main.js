@@ -92,19 +92,22 @@ d3.json('/dataset.json', function (err, data) {
     dataSelection.enter().append('rect');
 
     dataSelection
-      .attr('x', function (d, i) {
-        return xScale(d.id);
-      })
       .style('fill', function (d, i) {
         return cScale(d.total);
       })
       .attr('width', xScale.rangeBand())
+      .transition()
+      .attr('x', function (d, i) {
+        return xScale(d.id);
+      })
       .attr('height', function (d, i) {
         return (yScale(0) - yScale(d.total));
       })
       .attr('y', function (d, i) {
         return yScale(d.total);
-      })
+      });
+
+    dataSelection
       .on('mouseenter', function (d, i) {
         console.log(d.total);
         d3.select(d3.event.target)
