@@ -60,8 +60,8 @@ d3.json('/dataset.json', function (err, data) {
                     .range(['#face3d', 'red']);
 
     var yScale = d3.scale.linear()
-                  .domain([0, maxY * 1.05])
-                  .range([0, h]);
+                  .domain([0, maxY * 1.1])
+                  .range([h, 0]);
 
     var xScale = d3.scale.ordinal()
                     .domain(data
@@ -96,10 +96,10 @@ d3.json('/dataset.json', function (err, data) {
       })
       .attr('width', xScale.rangeBand())
       .attr('height', function (d, i) {
-        return yScale(d.total);
+        return (yScale(0) - yScale(d.total));
       })
       .attr('y', function (d, i) {
-        return h - yScale(d.total);
+        return yScale(d.total);
       })
       .on('mouseenter', function (d, i) {
         console.log(d.total);
