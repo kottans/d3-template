@@ -129,18 +129,15 @@ d3.json('/dataset.json', function (err, data) {
 
   d3.selectAll('.arrow')
     .on('click', function () {
-      var dataToDisplay;
-      var direction = d3.event.target
-        .className.split(' ').slice(-1)[0];
+      var dataToDisplay, skipNum = 5;
+      var direction = d3.event.target.className.split(' ').slice(-1)[0];
       if (direction === 'right') {
-        currentOffset += 1;
-        dataToDisplay = sortedData
-          .slice(currentOffset,
-            currentOffset + 10);
-        displayData(dataToDisplay);
+        currentOffset = (currentOffset + skipNum) % sortedData.length;
       } else {
-        alert('Not implemented yet');
+        currentOffset = (currentOffset + sortedData.length - skipNum) % sortedData.length;
       }
-
+      dataToDisplay = sortedData.concat(sortedData)
+        .slice(currentOffset, currentOffset + 10);
+      displayData(dataToDisplay);
     });
 });
