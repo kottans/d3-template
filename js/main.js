@@ -52,14 +52,15 @@ d3.json('/dataset.json', function (err, data) {
   var currentOffset = 0;
   var top10 = sortedData.slice(currentOffset, 10);
   displayData(top10);
+  var globalMax;
   function displayData(data) {
     var maxY = d3.max(data,
       function (d) {
         return d.total;
       });
-
+    globalMax = globalMax || maxY;
     var cScale = d3.scale.linear()
-                    .domain([0, maxY])
+                    .domain([0, globalMax])
                     .range(['#face3d', 'red']);
 
     var yScale = d3.scale.linear()
