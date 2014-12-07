@@ -1,4 +1,4 @@
-d3.json('/dataset.json', function (err, data) {
+d3.json('dataset.json', function (err, data) {
   if (err) {
     alert(err);
     return 1;
